@@ -255,7 +255,7 @@ class _PoliciesState extends State<Policies> {
                                       Text(
                                         'Period: ' +
                                             policyDetail["PolicyPeriod"] +
-                                            ' year',
+                                            ' days',
                                         style: TextStyle(
                                             fontSize: 16, color: Colors.grey),
                                       ),

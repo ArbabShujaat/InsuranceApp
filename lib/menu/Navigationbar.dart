@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:isurance/menu/categories.dart';
 import 'package:isurance/menu/home.dart';
 import 'package:isurance/menu/profile/profile.dart';
-import 'package:isurance/menu/search.dart';
+import 'package:isurance/menu/searchScreen.dart';
 import 'package:isurance/menu/setting/setting.dart';
-
 
 class NavigationBar extends StatefulWidget {
   @override
@@ -31,12 +30,12 @@ class _NavigationBarState extends State<NavigationBar> {
 
       case 2:
         return _categories;
-      
+
       case 3:
         return _setting;
 
       case 4:
-        return _profile; 
+        return _profile;
 
       default:
         return new Container(
@@ -67,28 +66,43 @@ class _NavigationBarState extends State<NavigationBar> {
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        elevation: 0,
+          backgroundColor: Colors.white,
+          type: BottomNavigationBarType.fixed,
+          elevation: 0,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home, size: 25,),
+              icon: Icon(
+                Icons.home,
+                size: 25,
+              ),
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.search, size: 25,),
+              icon: Icon(
+                Icons.search,
+                size: 25,
+              ),
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.category, size: 25,),
+              icon: Icon(
+                Icons.category,
+                size: 25,
+              ),
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings, size: 25,),
+              icon: Icon(
+                Icons.settings,
+                size: 25,
+              ),
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person, size: 25,),
+              icon: Icon(
+                Icons.person,
+                size: 25,
+              ),
               label: '',
             ),
           ],
@@ -96,7 +110,6 @@ class _NavigationBarState extends State<NavigationBar> {
           showUnselectedLabels: false,
           currentIndex: pageIndex,
           selectedItemColor: Colors.cyanAccent[700],
-          
           onTap: (int tappedIndex) {
             setState(() {
               animate = true;
@@ -104,7 +117,7 @@ class _NavigationBarState extends State<NavigationBar> {
               _showPage = _pageChooser(tappedIndex);
             });
           }),
-          body: Container(
+      body: Container(
         color: Colors.white,
         child: Center(
           child: _showPage,
@@ -113,8 +126,7 @@ class _NavigationBarState extends State<NavigationBar> {
     );
   }
 }
-    
-    
+
 //     Scaffold(
 //       bottomNavigationBar: CurvedNavigationBar(
 //         index: pageIndex,

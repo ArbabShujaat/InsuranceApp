@@ -1,4 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:isurance/Admin_panel/policies/PolicyModel.dart';
+import 'package:isurance/Login_signup/UserModel.dart';
+import 'package:isurance/menu/Profile/profile.dart';
+import 'package:isurance/menu/popular_policies.dart';
+
+import 'Profile/approved.dart';
+import 'insurance_details.dart';
 
 class Notifications extends StatefulWidget {
   Notifications({Key key}) : super(key: key);
@@ -25,228 +33,84 @@ class _NotificationsState extends State<Notifications> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: ListView(
-          children: [
-            Container(
-              height: 20,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        blurRadius: 10,
-                        offset: Offset(2, 2))
-                  ]),
-            ),
-            SizedBox(
-              height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 10),
-              child: Text(
-                'TODAY',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  offset: Offset(2, 2))
-                            ]),
-                        child: Center(
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: AssetImage('assets/tpl.jpg'),
-                              radius: 30,
-                            ),
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 10,bottom: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('TPL insurance accept your policy,'),
-                                  SizedBox(
-                                    height: 10,
+        child: StreamBuilder(
+            stream: Firestore.instance
+                .collection("Applications")
+                .where("UserUid", isEqualTo: userDetails.userUid)
+                .where("Approved", isEqualTo: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                  // child: Text(
+                  //   'NO POLOCIES YET',
+                  // ),
+                );
+              } else
+                return ListView.builder(
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot policyDetail =
+                          snapshot.data.documents[index];
+
+                      return InkWell(
+                        onTap: () {},
+                        child: Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Colors.grey.withOpacity(0.2),
+                                            blurRadius: 10,
+                                            offset: Offset(2, 2))
+                                      ]),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListTile(
+                                        leading: CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          backgroundImage: NetworkImage(
+                                              policyDetail[
+                                                  "PolicyCompanyImage"]),
+                                          radius: 30,
+                                        ),
+                                        title: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10, bottom: 10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(policyDetail[
+                                                      "PolicyCompany"] +
+                                                  ' accepted your policy,'),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  Text(
-                                    'Just now',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
-                      ),
-                  ),
-                ],
-              ),
-            ),
-           Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  offset: Offset(2, 2))
-                            ]),
-                        child: Center(
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: AssetImage('assets/igi.jpg'),
-                              radius: 30,
-                            ),
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('your policy is ending soon'),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Just now',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 10),
-              child: Text(
-                'LAST WEEK',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  offset: Offset(2, 2))
-                            ]),
-                        child: Center(
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: AssetImage('assets/tpl.jpg'),
-                              radius: 30,
-                            ),
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('TPL insurance accept your policy,'),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Just now',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                  ),
-                ],
-              ),
-            ),
-           Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  offset: Offset(2, 2))
-                            ]),
-                        child: Center(
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: AssetImage('assets/igi.jpg'),
-                              radius: 30,
-                            ),
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('your policy is ending soon'),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Just now',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+                      );
+                    });
+            }),
       ),
     );
   }

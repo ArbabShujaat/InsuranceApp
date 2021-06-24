@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:isurance/Admin_panel/policies/PolicyModel.dart';
+import 'package:isurance/Funtions/Functions.dart';
+import 'package:isurance/Login_signup/UserModel.dart';
 import 'package:isurance/menu/insurance_details.dart';
 import 'package:isurance/menu/payment.dart';
 
@@ -35,7 +37,9 @@ class _ApprovedState extends State<Approved> {
         child: StreamBuilder(
             stream: Firestore.instance
                 .collection("Applications")
-                .where("Approved", isEqualTo: true)
+                .where("Pending", isEqualTo: false)
+                .where("Approved", isEqualTo: false)
+                .where("UserUid", isEqualTo: userDetails.userUid)
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -214,7 +218,7 @@ class _ApprovedState extends State<Approved> {
                                       Text(
                                         'Period: ' +
                                             policyDetail["PolicyPeriod"] +
-                                            ' year',
+                                            ' days',
                                         style: TextStyle(
                                             fontSize: 16, color: Colors.grey),
                                       ),
@@ -242,11 +246,38 @@ class _ApprovedState extends State<Approved> {
                                               fontSize: 18.0,
                                             )),
                                         onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Payment()));
+                                          policyDetailsFromList = PolicyDetails(
+                                              policyCategory: policyDetail[
+                                                  "PolicyCategory"],
+                                              policyCompnay:
+                                                  policyDetail["PolicyCompany"],
+                                              policyCountry:
+                                                  policyDetail["PolicyCountry"],
+                                              policyDocID:
+                                                  policyDetail.documentID,
+                                              policyDescription: policyDetail[
+                                                  "PolicyDescription"],
+                                              policyImage:
+                                                  policyDetail["PolicyImage"],
+                                              policyPeriod:
+                                                  policyDetail["PolicyPeriod"],
+                                              policySubCategory: policyDetail[
+                                                  "PolicySubCategory"],
+                                              policyTerms: policyDetail[
+                                                  "TermsAndConditions"],
+                                              policyprice:
+                                                  policyDetail["PolicyPrice"],
+                                              policytiitle:
+                                                  policyDetail["PolicyTittle"],
+                                              policyCompanyImage: policyDetail[
+                                                  "PolicyCompanyImage"]);
+
+                                          companyImage = policyDetail[
+                                              "PolicyCompanyImage"];
+                                          setState(() {
+                                            disableApplybutton = true;
+                                          });
+                                          buyaPolicy();
                                         },
                                       ),
                                       Padding(

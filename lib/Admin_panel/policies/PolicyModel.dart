@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 PolicyDetails policyDetailsFromList;
 
+List<PolicyDetails> searchedpolicyDetailsFromList = [];
+
 class PolicyDetails {
   String policyImage;
   String policytiitle;

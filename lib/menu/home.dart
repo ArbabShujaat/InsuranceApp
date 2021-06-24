@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:isurance/Admin_panel/policies/PolicyModel.dart';
 import 'package:isurance/Admin_panel/policies/policies_list.dart';
+import 'package:isurance/Funtions/search.dart';
 import 'package:isurance/Login_signup/UserModel.dart';
 import 'package:isurance/TermsAndConditionViewer.dart';
 import 'package:isurance/menu/Policies.dart';
@@ -120,7 +121,47 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                   SizedBox(height: 10),
-                  _input("Search...", Icons.search)
+                  Stack(
+                    children: [
+                      Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 8, 15, 0),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintStyle: TextStyle(
+                                    color: Colors.grey[600], fontSize: 14),
+                                //labelText: label,
+                                hintText: "Search...",
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.grey,
+                                ),
+                                focusColor: Colors.grey,
+                                fillColor: Colors.white),
+                            //keyboardType: TextInputType.emailAddress,
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                            ),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          showSearch(context: context, delegate: DataSearch());
+                        },
+                        child: Container(
+                          height: 60,
+                          width: MediaQuery.of(context).size.width,
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
@@ -276,6 +317,7 @@ class _HomeState extends State<Home> {
                     stream: Firestore.instance
                         .collection("Applications")
                         .where("Approved", isEqualTo: true)
+                        .where("UserUid", isEqualTo: userDetails.userUid)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
@@ -293,63 +335,68 @@ class _HomeState extends State<Home> {
                               DocumentSnapshot policyDetail =
                                   snapshot.data.documents[index];
 
-                              return InkWell(
-                                onTap: () {
-                                  policyDetailsFromList = PolicyDetails(
-                                      policyCategory:
-                                          policyDetail["PolicyCategory"],
-                                      policyCompnay:
-                                          policyDetail["PolicyCompany"],
-                                      policyCountry:
-                                          policyDetail["PolicyCountry"],
-                                      policyDocID: policyDetail.documentID,
-                                      policyDescription:
-                                          policyDetail["PolicyDescription"],
-                                      policyImage: policyDetail["PolicyImage"],
-                                      policyPeriod:
-                                          policyDetail["PolicyPeriod"],
-                                      policySubCategory:
-                                          policyDetail["PolicySubCategory"],
-                                      policyTerms:
-                                          policyDetail["TermsAndConditions"],
-                                      policyprice: policyDetail["PolicyPrice"],
-                                      policytiitle:
-                                          policyDetail["PolicyTittle"],
-                                      policyCompanyImage:
-                                          policyDetail["PolicyCompanyImage"]);
-                                  setState(() {
-                                    disableApplybutton = true;
-                                  });
+                              return Container(
+                                height: MediaQuery.of(context).size.height / 3,
+                                width: 350,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          blurRadius: 10,
+                                          offset: Offset(2, 2))
+                                    ]),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              policyDetailsFromList = PolicyDetails(
+                                                  policyCategory: policyDetail[
+                                                      "PolicyCategory"],
+                                                  policyCompnay: policyDetail[
+                                                      "PolicyCompany"],
+                                                  policyCountry: policyDetail[
+                                                      "PolicyCountry"],
+                                                  policyDocID:
+                                                      policyDetail.documentID,
+                                                  policyDescription:
+                                                      policyDetail[
+                                                          "PolicyDescription"],
+                                                  policyImage: policyDetail[
+                                                      "PolicyImage"],
+                                                  policyPeriod: policyDetail[
+                                                      "PolicyPeriod"],
+                                                  policySubCategory:
+                                                      policyDetail[
+                                                          "PolicySubCategory"],
+                                                  policyTerms: policyDetail[
+                                                      "TermsAndConditions"],
+                                                  policyprice: policyDetail[
+                                                      "PolicyPrice"],
+                                                  policytiitle: policyDetail[
+                                                      "PolicyTittle"],
+                                                  policyCompanyImage:
+                                                      policyDetail[
+                                                          "PolicyCompanyImage"]);
+                                              setState(() {
+                                                disableApplybutton = true;
+                                              });
 
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              InsuranceDetails()));
-                                },
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 3,
-                                  width: 350,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.grey.withOpacity(0.2),
-                                            blurRadius: 10,
-                                            offset: Offset(2, 2))
-                                      ]),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          InsuranceDetails()));
+                                            },
+                                            child: Row(
                                               children: [
                                                 Padding(
                                                   padding:
@@ -392,215 +439,210 @@ class _HomeState extends State<Home> {
                                                 ),
                                               ],
                                             ),
-                                            RaisedButton(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  30, 10, 30, 10),
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          5.0)),
-                                              color: Colors.cyanAccent[700],
-                                              textColor: Colors.white,
-                                              child: Text("Extend",
-                                                  style: TextStyle(
-                                                    fontSize: 18.0,
-                                                  )),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Payment()));
-                                              },
+                                          ),
+                                          RaisedButton(
+                                            padding: EdgeInsets.fromLTRB(
+                                                30, 10, 30, 10),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0)),
+                                            color: Colors.cyanAccent[700],
+                                            textColor: Colors.white,
+                                            child: Text("Extend",
+                                                style: TextStyle(
+                                                  fontSize: 18.0,
+                                                )),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Payment()));
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('Policy ends in:'),
+                                          Text(
+                                            DateTime.parse(policyDetail[
+                                                        "EndingDate"])
+                                                    .difference(DateTime.now())
+                                                    .inDays
+                                                    .toString() +
+                                                ' Days',
+                                            style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        ],
+                                      ),
+                                      Slider(
+                                        value: DateTime.parse(
+                                                policyDetail["EndingDate"])
+                                            .difference(DateTime.now())
+                                            .inDays
+                                            .toDouble(),
+                                        min: 0,
+                                        max: DateTime.parse(
+                                                policyDetail["EndingDate"])
+                                            .difference(DateTime.parse(
+                                                policyDetail["StartingDate"]))
+                                            .inDays
+                                            .toDouble(),
+                                        onChanged: (_) => {},
+                                        activeColor: Colors.cyanAccent[700],
+                                        inactiveColor: Colors.grey[300],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TermsAndConditionViewer(
+                                                            termsAndConditions:
+                                                                policyDetail[
+                                                                    "TermsAndConditions"],
+                                                          )));
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          5, 10, 0, 0),
+                                                  child: Container(
+                                                    width: 40,
+                                                    height: 40,
+                                                    padding: EdgeInsets.all(8),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .cyanAccent[100],
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10)),
+                                                    ),
+                                                    child: Image(
+                                                      image: AssetImage(
+                                                          'assets/Policy.png'),
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          10, 10, 10, 0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        'Policy',
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 3),
+                                                      Text(
+                                                        'Document',
+                                                        style: TextStyle(
+                                                            fontSize: 13,
+                                                            color: Colors.grey),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 10),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text('Policy ends in:'),
-                                            Text(
-                                              DateTime.parse(policyDetail[
-                                                          "EndingDate"])
-                                                      .difference(
-                                                          DateTime.now())
-                                                      .inDays
-                                                      .toString() +
-                                                  ' Days',
-                                              style: TextStyle(
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          ],
-                                        ),
-                                        Slider(
-                                          value: DateTime.parse(
-                                                  policyDetail["EndingDate"])
-                                              .difference(DateTime.now())
-                                              .inDays
-                                              .toDouble(),
-                                          min: 0,
-                                          max: DateTime.parse(
-                                                  policyDetail["EndingDate"])
-                                              .difference(DateTime.parse(
-                                                  policyDetail["StartingDate"]))
-                                              .inDays
-                                              .toDouble(),
-                                          onChanged: (_) => {},
-                                          activeColor: Colors.cyanAccent[700],
-                                          inactiveColor: Colors.grey[300],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            TermsAndConditionViewer(
-                                                              termsAndConditions:
-                                                                  policyDetail[
-                                                                      "TermsAndConditions"],
-                                                            )));
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .fromLTRB(5, 10, 0, 0),
-                                                    child: Container(
-                                                      width: 40,
-                                                      height: 40,
-                                                      padding:
-                                                          EdgeInsets.all(8),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .cyanAccent[100],
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    10)),
-                                                      ),
-                                                      child: Image(
-                                                        image: AssetImage(
-                                                            'assets/Policy.png'),
-                                                        fit: BoxFit.fill,
-                                                      ),
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Chat(
+                                                            fromAdmin: false,
+                                                            recieverId:
+                                                                "5hh63aB3q6fEIyYnXd38",
+                                                            recieverAvatar:
+                                                                userDetails
+                                                                    .userImage,
+                                                            senderId:
+                                                                userDetails
+                                                                    .userDocId,
+                                                            senderAvatar:
+                                                                userDetails
+                                                                    .userImage,
+                                                          )));
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          10, 10, 0, 0),
+                                                  child: Container(
+                                                    width: 40,
+                                                    height: 40,
+                                                    padding: EdgeInsets.all(8),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.orange[100],
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10)),
+                                                    ),
+                                                    child: Image(
+                                                      image: AssetImage(
+                                                          'assets/headset.png'),
+                                                      fit: BoxFit.cover,
                                                     ),
                                                   ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .fromLTRB(
-                                                        10, 10, 10, 0),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'Policy',
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                          ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          10, 10, 10, 0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        'Get help',
+                                                        style: TextStyle(
+                                                          fontSize: 14,
                                                         ),
-                                                        SizedBox(height: 3),
-                                                        Text(
-                                                          'Document',
-                                                          style: TextStyle(
-                                                              fontSize: 13,
-                                                              color:
-                                                                  Colors.grey),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                      SizedBox(height: 3),
+                                                      Text(
+                                                        'Chat, claims',
+                                                        style: TextStyle(
+                                                            fontSize: 13,
+                                                            color: Colors.grey),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Chat(
-                                                              fromAdmin: false,
-                                                              recieverId:
-                                                                  "5hh63aB3q6fEIyYnXd38",
-                                                              recieverAvatar:
-                                                                  userDetails
-                                                                      .userImage,
-                                                              senderId:
-                                                                  userDetails
-                                                                      .userDocId,
-                                                              senderAvatar:
-                                                                  userDetails
-                                                                      .userImage,
-                                                            )));
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .fromLTRB(10, 10, 0, 0),
-                                                    child: Container(
-                                                      width: 40,
-                                                      height: 40,
-                                                      padding:
-                                                          EdgeInsets.all(8),
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            Colors.orange[100],
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    10)),
-                                                      ),
-                                                      child: Image(
-                                                        image: AssetImage(
-                                                            'assets/headset.png'),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .fromLTRB(
-                                                        10, 10, 10, 0),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'Get help',
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 3),
-                                                        Text(
-                                                          'Chat, claims',
-                                                          style: TextStyle(
-                                                              fontSize: 13,
-                                                              color:
-                                                                  Colors.grey),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                               );
