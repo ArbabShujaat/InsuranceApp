@@ -223,7 +223,7 @@ class _InsuranceDetailsState extends State<InsuranceDetails> {
                             Text(
                               'Period:' +
                                   policyDetailsFromList.policyPeriod +
-                                  ' year',
+                                  ' days',
                               style:
                                   TextStyle(fontSize: 16, color: Colors.grey),
                             ),

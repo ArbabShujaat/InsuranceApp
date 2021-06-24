@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:isurance/Funtions/Functions.dart';
+import 'package:isurance/Login_signup/UserModel.dart';
 import 'package:isurance/menu/notifications.dart';
 import 'package:isurance/menu/setting/change_password.dart';
+
+import '../chat.dart';
 
 class Setting extends StatefulWidget {
   Setting({Key key}) : super(key: key);
@@ -46,28 +50,28 @@ class _SettingState extends State<Setting> {
                   ]),
             ),
             SizedBox(height: 30),
+            // ListTile(
+            //   onTap: () {
+            //     Navigator.push(context,
+            //         MaterialPageRoute(builder: (context) => ChangePassword()));
+            //   },
+            //   dense: true,
+            //   visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+            //   leading: Text(
+            //     'Change password',
+            //     style: TextStyle(fontSize: 15),
+            //   ),
+            //   trailing: Icon(
+            //     Icons.navigate_next,
+            //     size: 18,
+            //     color: Colors.black,
+            //   ),
+            // ),
+            // Divider(),
             ListTile(
-              onTap: (){
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => ChangePassword()));
-              },
-              dense: true,
-              visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-              leading: Text(
-                'Change password',
-                style: TextStyle(fontSize: 15),
-              ),
-              trailing: Icon(
-                Icons.navigate_next,
-                size: 18,
-                color: Colors.black,
-              ),
-            ),
-            Divider(),
-            ListTile(
-              onTap: (){
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Notifications()));
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Notifications()));
               },
               dense: true,
               visualDensity: VisualDensity(horizontal: 0, vertical: -4),
@@ -83,6 +87,18 @@ class _SettingState extends State<Setting> {
             ),
             Divider(),
             ListTile(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Chat(
+                              fromAdmin: false,
+                              recieverId: "5hh63aB3q6fEIyYnXd38",
+                              recieverAvatar: userDetails.userImage,
+                              senderId: userDetails.userDocId,
+                              senderAvatar: userDetails.userImage,
+                            )));
+              },
               dense: true,
               visualDensity: VisualDensity(horizontal: 0, vertical: -4),
               leading: Text(
@@ -113,15 +129,21 @@ class _SettingState extends State<Setting> {
             Padding(
               padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
               child: RaisedButton.icon(
-                 padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                  padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0)),
                   color: Colors.white,
                   textColor: Colors.black,
-                  onPressed: () {},
-                  icon: Icon(Icons.logout, color: Colors.red,),
-                  label: Text('Logout',
-                  style: TextStyle(fontSize: 15),
+                  onPressed: () {
+                    signOut(context);
+                  },
+                  icon: Icon(
+                    Icons.logout,
+                    color: Colors.red,
+                  ),
+                  label: Text(
+                    'Logout',
+                    style: TextStyle(fontSize: 15),
                   )),
             ),
             SizedBox(height: 30),

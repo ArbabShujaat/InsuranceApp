@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:isurance/Admin_panel/policies/PolicyModel.dart';
 import 'package:isurance/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,6 +58,36 @@ class SplashScreenState extends State<SplashScreen>
                 for (int i = 0; i < value.docs.length; i++)
                   {
                     wishListDocid.add(value.docs[i]["documentId"]),
+                  }
+              });
+
+      await Firestore.instance
+          .collection("Policies List")
+          .getDocuments()
+          .then((policyDetail) => {
+                print(policyDetail.docs.length),
+                for (int i = 0; i < policyDetail.docs.length; i++)
+                  {
+                    searchedpolicyDetailsFromList.add(PolicyDetails(
+                        policyCategory: policyDetail.documents[i]
+                            ["PolicyCategory"],
+                        policyCompnay: policyDetail.documents[i]
+                            ["PolicyCompany"],
+                        policyCountry: policyDetail.documents[i]
+                            ["PolicyCountry"],
+                        policyDocID: policyDetail.documents[i].documentID,
+                        policyDescription: policyDetail.documents[i]
+                            ["PolicyDescription"],
+                        policyImage: policyDetail.documents[i]["PolicyImage"],
+                        policyPeriod: policyDetail.documents[i]["PolicyPeriod"],
+                        policySubCategory: policyDetail.documents[i]
+                            ["PolicySubCategory"],
+                        policyTerms: policyDetail.documents[i]
+                            ["TermsAndConditions"],
+                        policyprice: policyDetail.documents[i]["PolicyPrice"],
+                        policytiitle: policyDetail.documents[i]["PolicyTittle"],
+                        policyCompanyImage: policyDetail.documents[i]
+                            ["PolicyCompanyImage"])),
                   }
               });
 

@@ -307,6 +307,7 @@ class _ProfileState extends State<Profile> {
                     stream: Firestore.instance
                         .collection("Applications")
                         .where("Approved", isEqualTo: true)
+                        .where("UserUid", isEqualTo: userDetails.userUid)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
@@ -469,7 +470,7 @@ class _ProfileState extends State<Profile> {
                                               .difference(DateTime.now())
                                               .inDays
                                               .toDouble(),
-                                          min: 0,
+                                          min: 0.0,
                                           max: DateTime.parse(
                                                   policyDetail["EndingDate"])
                                               .difference(DateTime.parse(
